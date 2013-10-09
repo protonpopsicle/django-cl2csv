@@ -8,5 +8,5 @@ setup(name='django-cl2csv',
       author='Scott Meisburger',
       author_email='smeisburger@gmail.com',
       url='https://github.com/protonpopsicle/django-cl2csv',
-      packages=['2csv'],
+      packages=['cl2csv'],
      )
