@@ -1,6 +1,7 @@
 import csv
 import datetime
 import decimal
+import re
 
 from django.conf.urls import patterns
 from django.contrib import admin
@@ -8,6 +9,7 @@ from django.contrib.admin.util import lookup_field, label_for_field
 from django.http import HttpResponse
 from django.utils import formats, timezone, six
 from django.utils.encoding import smart_text
+from django.utils.html import strip_tags
 
 
 # based on admin.util.display_for_value
@@ -15,7 +17,7 @@ def display_for_value(value, boolean=False):
     if value is None:
         return ''
     if isinstance(value, bool):
-        if value:
+        if value == True:
             return 'X'
         return ''
     elif isinstance(value, datetime.datetime):
@@ -25,7 +27,11 @@ def display_for_value(value, boolean=False):
     elif isinstance(value, six.integer_types + (decimal.Decimal, float)):
         return formats.number_format(value)
     else:
-        return smart_text(value)
+        return perform_substitutions(smart_text(value))
+
+def perform_substitutions(value):
+    value = value.replace('&nbsp;', ' ')
+    return strip_tags(re.sub('<br ?/?>', '\n', value))
 
 def csv_value(field_name, obj, modeladmin):
     f, attr, value = lookup_field(field_name, obj, modeladmin)
@@ -35,7 +41,7 @@ def csv_header(modeladmin, field_name):
     return label_for_field(field_name, modeladmin.model, modeladmin, False).title()
 
 def csv_file_name(opts):
-    return '%s_%s.csv' % (unicode(opts).replace('.', '_'), datetime.date.today())
+    return '%s_%s.csv' % (opts.verbose_name_plural.title().replace('.', '_'), datetime.date.today())
 
 def export_as_csv(modeladmin, queryset):
     opts = modeladmin.model._meta
