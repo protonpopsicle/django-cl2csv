@@ -38,23 +38,28 @@ def csv_value(field_name, obj, modeladmin):
     return unicode(display_for_value(value)).encode('utf-8', 'replace')
 
 def csv_header(modeladmin, field_name):
-    return label_for_field(field_name, modeladmin.model, modeladmin, False).title()
+    return label_for_field(field_name, modeladmin.model, modeladmin, 
+                           False).title()
 
 def csv_file_name(opts):
-    return '%s_%s.csv' % (opts.verbose_name_plural.title().replace('.', '_'), datetime.date.today())
+    return '{}_{}.csv'.format(opts.verbose_name_plural.title().replace('.', '_'), 
+                              datetime.date.today())
 
 def export_as_csv(modeladmin, queryset):
     opts = modeladmin.model._meta
-
     response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=%s' % csv_file_name(opts)
+    response['Content-Disposition'] = 'attachment; filename={}'.format(
+        csv_file_name(opts))
     writer = csv.writer(response)
 
-    fields = [field for field in modeladmin.list_display if field not in modeladmin.hide_from_export]
+    fields = [field for field in modeladmin.list_display 
+              if field not in modeladmin.hide_from_export]
 
-    writer.writerow([csv_header(modeladmin, field_name) for field_name in fields])
+    writer.writerow([csv_header(modeladmin, field_name) 
+                     for field_name in fields])
     for obj in queryset:
-        writer.writerow([csv_value(field_name, obj, modeladmin) for field_name in fields])
+        writer.writerow([csv_value(field_name, obj, modeladmin) 
+                         for field_name in fields])
     return response
 
 class ExportModelAdmin(admin.ModelAdmin):
@@ -65,12 +70,11 @@ class ExportModelAdmin(admin.ModelAdmin):
         urls = super(ExportModelAdmin, self).get_urls()
 
         my_urls = patterns('',
-            (r'^export/$', self.export_view),
-        )
+            (r'^export/$', self.export_view))
         return my_urls + urls
 
     def export_view(self, request):
-        # instantiate a ChangeList so we can jack its query set
+        # instantiate a ChangeList so we can access its query set
         list_display = self.get_list_display(request)
         list_display_links = self.get_list_display_links(request, list_display)
         list_filter = self.get_list_filter(request)
@@ -79,7 +83,6 @@ class ExportModelAdmin(admin.ModelAdmin):
         cl = ChangeList(request, self.model, list_display,
             list_display_links, list_filter, self.date_hierarchy,
             self.search_fields, self.list_select_related,
-            self.list_per_page, self.list_max_show_all, self.list_editable,
-            self)
+            self.list_per_page, self.list_max_show_all, self.list_editable, self)
 
         return export_as_csv(self, cl.get_query_set(request))

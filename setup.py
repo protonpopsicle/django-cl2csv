@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='django-cl2csv',
-      version='0.1',
+      version='0.11',
       description='Export what you see in the Django admin list view.',
       author='Scott Meisburger',
       author_email='smeisburger@gmail.com',
