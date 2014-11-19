@@ -8,7 +8,7 @@ Installation
 
 `$ pip install django-cl2csv`
 
-* Add "cl2csv" to your INSTALLED_APPS setting like this:
+Add "cl2csv" to your INSTALLED_APPS setting like this:
 
 ```python
 	INSTALLED_APPS = (
