@@ -1,10 +1,26 @@
 django-cl2csv
-===================
+===
 
-CL2CSV (Change List to CSV) is a Django app (pluggable) that makes change lists (in the admin) exportable. The resulting CSV looks EXACTLY like what's on your screen. Certain fields can be hidden from export. This app is lightweight.
+cl2csv is a tiny Django app for adding export functionality and interface to the built-in admin's list views. Fields can be hidden from export. The name is short for "Change list to Comma Separated Values".
+
+Installation
+---
+
+1. Install via pip:
+
+`$ pip install django-cl2csv`
+
+2. Add "cl2csv" to your INSTALLED_APPS setting like this:
+
+```python
+	INSTALLED_APPS = (
+        ...
+        'cl2csv',
+    )
+```
 
 Usage
------
+--
 
 ```python
 from cl2csv.options import ExportModelAdmin
