@@ -1,7 +1,7 @@
 django-cl2csv
 ===
 
-cl2csv is a tiny Django app for adding export functionality and interface to the built-in admin's list views. Fields can be hidden from export. The name is short for "Change list to Comma Separated Values".
+cl2csv is a tiny Django app for adding export functionality to the built-in admin list views. Fields can be hidden from export. The name is short for "Change list to Comma Separated Values".
 
 Installation
 ---
